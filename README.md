@@ -8,17 +8,17 @@ For a basic full training, make this:
 ### Get Data & Build Tokenizer:
 ```bash
 python3 data/get_data.py
-````
+```
 
 ### Train the model:
-```
-python3 main.py 
 ```bash
+python3 main.py 
+```
 
 ### Make inference with that:
 ```bash
 pyhon3 predict.py
-````
+```
 
 ### Experimentation Results:
 
