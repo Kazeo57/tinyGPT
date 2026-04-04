@@ -1,0 +1,9 @@
+#Models
+*.ckpt 
+*.pth
+
+#Data
+data/*.txt
+
+#Add
+view.py
