@@ -43,9 +43,18 @@ def generate(model,start_seq="All this was acknowledged".lower(),length=100):
             ##next_id=torch.multinomial(probs,num_samples=1)
             ###
             last_logits = logits.view(-1, logits.size(-1))[-1] 
-            v, i = torch.topk(last_logits, 50)       
+
+            # 2. Top-K (renvoie deux vecteurs 1D de taille 50)
+            v, i = torch.topk(last_logits, 50)
+
+            # 3. Softmax pour transformer les scores en probabilités
             probs = torch.nn.functional.softmax(v, dim=-1)
+
+            # 4. On pioche un index LOCAL (entre 0 et 49)
             idx_in_topk = torch.multinomial(probs, num_samples=1).item()
+
+            # 5. On récupère le VRAI ID (celui du vocabulaire global)
+            # Comme 'i' est en 1D, on utilise un seul index
             next_id = i[idx_in_topk].item()
             ###
             #print("Next_id",next_id.tolist())
