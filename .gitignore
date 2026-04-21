@@ -7,4 +7,5 @@ data/*.txt
 
 #Add
 view.py
+test_predict.py
 *.csv
