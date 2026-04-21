@@ -1,42 +1,48 @@
 import json
 import torch 
 import torch.nn as nn
-from model import TinyGPT
+from model import TinyBert, TinyGPT
 from tqdm import tqdm
 import pandas as pd 
 import time 
 from data.utils import TextDataset
 from torch.utils.data import DataLoader
+from data.get_data import remove_special_characters
 
-
+#DEVICE='cuda' if torch.cuda.is_available() else 'cpu'
 DEVICE='mps' if torch.mps.is_available() else 'cpu'
-with open('data/vocab.json','r',encoding='utf-8') as f:
+#with open('data/vocab.json','r',encoding='utf-8') as f:
+with open('words_vocab.json','r',encoding='utf-8') as f:
     vocab=json.load(f)
 
-encode=lambda s: [vocab[c] for c in s]
+#encode=lambda s: [vocab[c] for c in s]
+#decode=lambda l: "".join([k for id in l for k,v in vocab.items() if id==v])
+encode=lambda s: [vocab[w] for w in s.split()]
 decode=lambda l: "".join([k for id in l for k,v in vocab.items() if id==v])
 
 with open("data/input.txt","r",encoding="utf-8") as f:
     text=f.read()
-
+text=remove_special_characters(text)
 block_size=64
 data=torch.tensor(encode(text),dtype=torch.long,device=DEVICE)
 n=data.size(0)// block_size*block_size 
 data=data[:n].view(-1,block_size)
 chars=sorted(list(set(text)))
 
-
+#words=sorted(text.split())
 dataset=TextDataset(data)
 dataloader=DataLoader(dataset,batch_size=64,shuffle=True)
 
-model=TinyGPT(vocab_size=len(chars),block_size=block_size,n_emb=128)
+#model=TinyBert(vocab_size=len(chars),block_size=block_size,n_emb=128)
+print("Vocab Size",len(vocab))
+model=TinyGPT(embed_dim=128,vocab_size=len(vocab),num_heads=4,num_layers=8)
 model.to(DEVICE)
 optimizer=torch.optim.Adam(model.parameters(),lr=0.001)
 loss_fn=nn.CrossEntropyLoss()
 checkpoint={}
 track_loss=[]
 training_time=[]
-for epoch in tqdm(range(1,11)):
+for epoch in tqdm(range(1,51)):
     start=time.perf_counter()
     for x,y in dataloader:
         optimizer.zero_grad()
@@ -60,6 +66,6 @@ for epoch in tqdm(range(1,11)):
 
 
 #torch.save(model.state_dict(),"")
-pd.DataFrame({"Epoch":[num+1 for num in range(len(track_loss))],"Loss":track_loss,"Time":training_time}).to_csv('Training_metadata.csv')
+pd.DataFrame({"Epoch":[num+1 for num in range(len(track_loss))],"Loss":track_loss,"Time":training_time}).to_csv(f'Training_metadata{time.localtime}.csv',index=False)
 
-torch.save(checkpoint,f"checkpoint_{epoch}.pth")
+torch.save(checkpoint,f"checkpoint_{epoch}_gpt.pth")

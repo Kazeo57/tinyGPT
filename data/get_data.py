@@ -30,6 +30,22 @@ itos={i:ch for i,ch in enumerate(chars)}
 with open("vocab.json","w") as f:
     json.dump(stoi,f,indent=4)
 
+#Build Vocabulary 
+import re 
+chars_to_remove_regex = '[0-9\,\?\.\!\-\;\:\"\“\%\‘\”\�\'\။\၊\…\(\)\*]'
+
+def remove_special_characters(batch):
+    batch = re.sub(chars_to_remove_regex, '', batch).lower()
+    return batch
+normalized_text=remove_special_characters(text)
+words=sorted(set(normalized_text.split()))
+#words=sorted(set(text.split()))
+stoi={ch:i for i,ch in enumerate(words)}
+itos={i:ch for i,ch in enumerate(words)}
+
+with open("words_vocab.json","w") as f:
+    json.dump(stoi,f,indent=4)
+
 
 
 
