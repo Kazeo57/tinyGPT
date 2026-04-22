@@ -42,9 +42,9 @@ class SelfAttention(nn.Module):
         return score 
     
     
-    Wq=nn.Linear(in_features=dim,out_features=dim)
-    Wk=nn.Linear(in_features=dim,out_features=dim)
-    Wv=nn.Linear(in_features=dim,out_features=dim)
+    #Wq=nn.Linear(in_features=dim,out_features=dim)
+    #Wk=nn.Linear(in_features=dim,out_features=dim)
+    #Wv=nn.Linear(in_features=dim,out_features=dim)
 
 """
     q=Wq(embedded_input)

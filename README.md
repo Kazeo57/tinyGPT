@@ -21,7 +21,9 @@ pyhon3 predict.py
 ```
 
 ### Experimentation Results:
-
+**Loss:** 0.5604
+**Epochs:** 50
+![Training loss](training_loss2.png)
 
 # Technologies
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)

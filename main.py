@@ -8,6 +8,9 @@ import time
 from data.utils import TextDataset
 from torch.utils.data import DataLoader
 from data.get_data import remove_special_characters
+from datetime import datetime
+
+
 
 #DEVICE='cuda' if torch.cuda.is_available() else 'cpu'
 DEVICE='mps' if torch.mps.is_available() else 'cpu'
@@ -66,6 +69,6 @@ for epoch in tqdm(range(1,51)):
 
 
 #torch.save(model.state_dict(),"")
-pd.DataFrame({"Epoch":[num+1 for num in range(len(track_loss))],"Loss":track_loss,"Time":training_time}).to_csv(f'Training_metadata{time.localtime}.csv',index=False)
+pd.DataFrame({"Epoch":[num+1 for num in range(len(track_loss))],"Loss":track_loss,"Time":training_time}).to_csv(f'Training_metadata{datetime.now()}.csv',index=False)
 
 torch.save(checkpoint,f"checkpoint_{epoch}_gpt.pth")
